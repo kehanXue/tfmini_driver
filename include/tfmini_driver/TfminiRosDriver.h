@@ -5,8 +5,9 @@
 #include <queue>
 
 #include <ros/ros.h>
-#include <sensor_msgs/Imu.h>
-#include <sensor_msgs/MagneticField.h>
+#include <std_msgs/Float32.h>
+#include <std_msgs/Int32.h>
+#include <std_msgs/Int8.h>
 #include <tf/tf.h>
 
 #include <tfmini_driver/TfminiSerialHardware.h>
@@ -33,12 +34,14 @@ namespace vwpp
         int msg_length;
 
         std::string frame_id;
-        sensor_msgs::Imu msg_imu;
-        sensor_msgs::MagneticField msg_mag;
+        std_msgs::Float32 msg_dist;
+        std_msgs::Int32 msg_strength;
+        std_msgs::Int8 msg_mode;
 
         ros::NodeHandle nh;
-        ros::Publisher imu_pub;
-        ros::Publisher mag_pub;
+        ros::Publisher dist_pub;
+        ros::Publisher strength_pub;
+        ros::Publisher mode_pub;
     };
     
 } // namespace vwpp

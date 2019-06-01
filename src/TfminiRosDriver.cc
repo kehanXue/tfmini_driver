@@ -5,11 +5,11 @@ using namespace vwpp;
 
 TfminiRosDriver::TfminiRosDriver():
     nh(ros::NodeHandle("~")),
-    model("100D2"),
+    model("tfmini"),
     port("/dev/ttyUSB0"),
     baud(115200),
-    frame_id("imu_link"),
-    msg_length(40)
+    frame_id("tfmini_link"),
+    msg_length(9)
 {
     this->node_name = ros::this_node::getName();
 
@@ -70,28 +70,39 @@ TfminiRosDriver::TfminiRosDriver():
     }
 
     // TODO: Consider add to the initial list.
-    std::string imu_pub_topic_name = "imu";
-    std::string mag_pub_topic_name = "imu_mag";
-    if (nh.hasParam("imu_topic"))
+    std::string dist_pub_topic_name = "dist";
+    std::string strength_pub_topic_name = "strength";
+    std::string mode_pub_topic_name = "mode";
+    if (nh.hasParam("dist_topic"))
     {
-        nh.getParam("imu_topic", imu_pub_topic_name);
-        ROS_INFO("%s, use imu_topic name %s", this->node_name.c_str(), imu_pub_topic_name.c_str());
+        nh.getParam("dist_topic", dist_pub_topic_name);
+        ROS_INFO("%s, use dist_topic name %s", this->node_name.c_str(), dist_pub_topic_name.c_str());
     }
     else
     {
-        ROS_WARN("%s, use the default imu_topic name %s", this->node_name.c_str(), imu_pub_topic_name.c_str());
+        ROS_WARN("%s, use the default imu_topic name %s", this->node_name.c_str(), dist_pub_topic_name.c_str());
     }
-    if (nh.hasParam("mag_topic"))
+    if (nh.hasParam("strength_topic"))
     {
-        nh.getParam("mag_topic", mag_pub_topic_name);
-        ROS_INFO("%s, use mag_topic name %s", this->node_name.c_str(), mag_pub_topic_name.c_str());
+        nh.getParam("strength_topic", strength_pub_topic_name);
+        ROS_INFO("%s, use strength_topic name %s", this->node_name.c_str(), strength_pub_topic_name.c_str());
     }
     else
     {
-        ROS_WARN("%s, use the default mag_port name %s", this->node_name.c_str(), mag_pub_topic_name.c_str());
+        ROS_WARN("%s, use the default strength_topic name %s", this->node_name.c_str(), strength_pub_topic_name.c_str());
     }
-    imu_pub = nh.advertise<sensor_msgs::Imu>(imu_pub_topic_name, 1);
-    mag_pub = nh.advertise<sensor_msgs::MagneticField>(mag_pub_topic_name, 1);
+    if (nh.hasParam("mode_topic"))
+    {
+        nh.getParam("mode_topic", mode_pub_topic_name);
+        ROS_INFO("%s, use mode_topic name %s", this->node_name.c_str(), mode_pub_topic_name.c_str());
+    }
+    else
+    {
+        ROS_WARN("%s, use the default mode_topic name %s", this->node_name.c_str(), mode_pub_topic_name.c_str());
+    }
+    dist_pub = nh.advertise<std_msgs::Float32>(dist_pub_topic_name, 1);
+    strength_pub = nh.advertise<std_msgs::Int32>(strength_pub_topic_name, 1);
+    mode_pub = nh.advertise<std_msgs::Int8>(mode_pub_topic_name, 1);
 
 
 }
@@ -113,34 +124,17 @@ void TfminiRosDriver::publishData()
         while( !(this->que_tfmini_data_.empty()) )
         {
 
-            this->msg_imu.header.stamp = ros::Time::now();
-            this->msg_imu.header.frame_id = this->frame_id;
+            // TODO need to add the header and the stamped.
+            this->msg_dist.data = this->que_tfmini_data_.front().dist;
+            this->msg_strength.data = this->que_tfmini_data_.front().strength;
+            this->msg_mode.data = this->que_tfmini_data_.front().mode;
 
-            this->msg_imu.orientation.w = this->que_tfmini_data_.front().q_.w;
-            this->msg_imu.orientation.x = this->que_tfmini_data_.front().q_.x;
-            this->msg_imu.orientation.y = this->que_tfmini_data_.front().q_.y;
-            this->msg_imu.orientation.z = this->que_tfmini_data_.front().q_.z;
-
-            this->msg_imu.angular_velocity.x = this->que_tfmini_data_.front().av_.x;
-            this->msg_imu.angular_velocity.y = this->que_tfmini_data_.front().av_.y;
-            this->msg_imu.angular_velocity.z = this->que_tfmini_data_.front().av_.z;
-
-            this->msg_imu.linear_acceleration.x = this->que_tfmini_data_.front().la_.x;
-            this->msg_imu.linear_acceleration.y = this->que_tfmini_data_.front().la_.y;
-            this->msg_imu.linear_acceleration.z = this->que_tfmini_data_.front().la_.z;
-
-            this->imu_pub.publish(this->msg_imu);
-
-
-            this->msg_mag.header.stamp = this->msg_imu.header.stamp;
-            this->msg_mag.header.frame_id = this->msg_imu.header.frame_id;
-            this->msg_mag.magnetic_field.x = this->que_tfmini_data_.front().mf_.x;
-            this->msg_mag.magnetic_field.y = this->que_tfmini_data_.front().mf_.y;
-            this->msg_mag.magnetic_field.z = this->que_tfmini_data_.front().mf_.z;
-
-            this->mag_pub.publish(this->msg_mag);
+            this->dist_pub.publish(this->msg_dist);
+            this->strength_pub.publish(this->msg_strength);
+            this->mode_pub.publish(this->msg_mode);
 
             this->que_tfmini_data_.pop();
         }
     }
 }
+

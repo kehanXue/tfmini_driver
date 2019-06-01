@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<launch>
+  <node pkg="tfmini_driver"
+        name="tfmini_driver_node"
+        type="tfmini_driver_node"
+        output="screen">
+    <param name="port" value="/dev/ttyUSB0"/>
+    <param name="model" value="tfmini"/>
+    <param name="baud" value="115200"/>
+    <param name="frame_id" value="tfmini_link"/>
+    <param name="msg_length" value="9"/>
+    <param name="publish_rate" value="100"/>
+  </node>
+
+</launch>

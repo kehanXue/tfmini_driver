@@ -14,14 +14,9 @@
 #include <string.h> //  strerror
 
 
-float d2f_acc(uint8_t a[2]);
-float d2f_gyro(uint8_t a[2]);
-float d2f_mag(uint8_t a[2]);
-float d2f_euler(uint8_t a[2]);
-double d2f_latlon(uint8_t a[4]);
-double d2f_gpsvel(uint8_t a[2]);
-float d2ieee754(uint8_t a[4]);
-
+float d2f_dist(uint8_t a[2]);
+int d2i_strength(uint8_t a[2]);
+int u82i_mode(uint8_t a[1]);
 
 
 #endif

@@ -20,33 +20,15 @@ namespace vwpp
         virtual ~TfminiSerialHardware();
 
 
-        struct Orientation
-        {
-        public:
-            double w;
-            double x;
-            double y;
-            double z;
-        };
-
-        struct Vector3f
-        {
-        public:
-            float x;
-            float y;
-            float z;
-        };
-        
-        typedef Vector3f AngularVelocity;
-        typedef Vector3f LinearAcceleration;
-        typedef Vector3f MagneticField; 
+        typedef double Dist;
+        typedef int Strength;
+        typedef int Mode;
 
         struct TfminiData
         {
-            Orientation q_;
-            AngularVelocity av_;
-            LinearAcceleration la_;
-            MagneticField mf_;
+            Dist dist;
+            Strength strength;
+            Mode mode;
         };
 
         std::queue<TfminiSerialHardware::TfminiData> readData();
@@ -65,8 +47,6 @@ namespace vwpp
 
         BoostSerialCommunicator* boost_serial_communicator;
 
-        const uint8_t* msg_stop;
-        const uint8_t* msg_start;
 
     };
 

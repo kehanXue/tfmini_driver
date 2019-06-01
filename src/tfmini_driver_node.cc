@@ -8,9 +8,9 @@ using namespace vwpp;
 
 int main(int argc, char** argv)
 {
-    ros::init(argc, argv, "sanchi_driver_node");
+    ros::init(argc, argv, "tfmini_driver_node");
 
-    TfminiRosDriver sanchi_ros_driver;
+    TfminiRosDriver tfmini_ros_driver;
     
     int publish_rate = 100;
     ros::NodeHandle nh("~");
@@ -28,7 +28,7 @@ int main(int argc, char** argv)
     ros::Rate loop_rate(publish_rate/2);
     while (ros::ok())
     {
-        sanchi_ros_driver.publishData();
+        tfmini_ros_driver.publishData();
         loop_rate.sleep();
     }
 
