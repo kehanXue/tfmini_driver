@@ -80,7 +80,7 @@ TfminiRosDriver::TfminiRosDriver():
     }
     else
     {
-        ROS_WARN("%s, use the default imu_topic name %s", this->node_name.c_str(), dist_pub_topic_name.c_str());
+        ROS_WARN("%s, use the default dist_topic name %s", this->node_name.c_str(), dist_pub_topic_name.c_str());
     }
     if (nh.hasParam("strength_topic"))
     {
