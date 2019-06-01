@@ -1,3 +1,6 @@
+#ifndef TFMINIROSDRIVER_H_
+#define TFMINIROSDRIVER_H_
+
 #include <string>
 #include <queue>
 
@@ -6,21 +9,21 @@
 #include <sensor_msgs/MagneticField.h>
 #include <tf/tf.h>
 
-#include <sanchi_driver/SanchiSerialHardware.h>
+#include <tfmini_driver/TfminiSerialHardware.h>
 
 namespace vwpp
 {
-    class SanchiRosDriver
+    class TfminiRosDriver
     {
     public:
-        SanchiRosDriver();
-        virtual ~SanchiRosDriver();
+        TfminiRosDriver();
+        virtual ~TfminiRosDriver();
         void publishData();
     
     private:
 
-        SanchiSerialHardware* sanchi_serial_hardware;
-        std::queue<SanchiSerialHardware::SanchiData> que_sanchi_data_;
+        TfminiSerialHardware* tfmini_serial_hardware;
+        std::queue<TfminiSerialHardware::TfminiData> que_tfmini_data_;
 
 
         std::string node_name;
@@ -39,3 +42,5 @@ namespace vwpp
     };
     
 } // namespace vwpp
+
+#endif

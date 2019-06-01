@@ -1,6 +1,6 @@
 #include <ros/ros.h>
-#include <sanchi_driver/SanchiRosDriver.h>
-#include <sanchi_driver/utils.h>
+#include <tfmini_driver/TfminiRosDriver.h>
+#include <tfmini_driver/utils.h>
 
 using namespace std;
 using namespace vwpp;
@@ -10,7 +10,7 @@ int main(int argc, char** argv)
 {
     ros::init(argc, argv, "sanchi_driver_node");
 
-    SanchiRosDriver sanchi_ros_driver;
+    TfminiRosDriver sanchi_ros_driver;
     
     int publish_rate = 100;
     ros::NodeHandle nh("~");

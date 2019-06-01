@@ -1,11 +1,11 @@
-#include <sanchi_driver/SanchiSerialHardware.h>
-#include <sanchi_driver/utils.h>
+#include <tfmini_driver/TfminiSerialHardware.h>
+#include <tfmini_driver/utils.h>
 #include <eigen3/Eigen/Geometry> 
 #include <iostream>
 
 using namespace vwpp;
 
-SanchiSerialHardware::SanchiSerialHardware(std::string model_, std::string port_, int baud_, 
+TfminiSerialHardware::TfminiSerialHardware(std::string model_, std::string port_, int baud_,
                                            int msg_length_,
                                            boost_serial_base::flow_control::type fc_type_,
                                            boost_serial_base::parity::type pa_type_, 
@@ -40,14 +40,14 @@ SanchiSerialHardware::SanchiSerialHardware(std::string model_, std::string port_
 
 }
 
-SanchiSerialHardware::~SanchiSerialHardware()
+TfminiSerialHardware::~TfminiSerialHardware()
 {
     delete   this->boost_serial_communicator;
     delete[] this->msg_start;
     delete[] this->msg_stop;
 }
 
-std::queue<SanchiSerialHardware::SanchiData> SanchiSerialHardware::readData()
+std::queue<TfminiSerialHardware::TfminiData> TfminiSerialHardware::readData()
 {
     static uint8_t* data_raw;
 
@@ -56,9 +56,9 @@ std::queue<SanchiSerialHardware::SanchiData> SanchiSerialHardware::readData()
     int flag_msg_rev = 0;
 
     // When get the new data_raw, clean up the queue buf before.
-    while ( !(this->que_sanchi_data.empty()) ) 
+    while ( !(this->que_tfmini_data.empty()) )
     {
-        this->que_sanchi_data.pop();
+        this->que_tfmini_data.pop();
     }
 
     const int msg_buf_length = 2*(this->msg_length);
@@ -94,7 +94,7 @@ std::queue<SanchiSerialHardware::SanchiData> SanchiSerialHardware::readData()
             }
 
 
-            SanchiData per_sanchi_data;
+            TfminiData per_tfmini_data;
             Eigen::Vector3d ea0(-d2f_euler(data + 3) * M_PI / 180.0,
                                  d2f_euler(data + 7) * M_PI / 180.0,
                                  d2f_euler(data + 5) * M_PI / 180.0);
@@ -104,29 +104,29 @@ std::queue<SanchiSerialHardware::SanchiData> SanchiSerialHardware::readData()
                 * Eigen::AngleAxisd(ea0[2], ::Eigen::Vector3d::UnitX());
             Eigen::Quaterniond q;
             q = R;
-            per_sanchi_data.q_.w = (double)q.w();
-            per_sanchi_data.q_.x = (double)q.x();
-            per_sanchi_data.q_.y = (double)q.y();
-            per_sanchi_data.q_.z = (double)q.z();
+            per_tfmini_data.q_.w = (double)q.w();
+            per_tfmini_data.q_.x = (double)q.x();
+            per_tfmini_data.q_.y = (double)q.y();
+            per_tfmini_data.q_.z = (double)q.z();
 
-            per_sanchi_data.av_.x = d2f_gyro(data + 15) * M_PI /180;
-            per_sanchi_data.av_.y = d2f_gyro(data + 17) * M_PI /180;
-            per_sanchi_data.av_.z = d2f_gyro(data + 19) * M_PI /180;
+            per_tfmini_data.av_.x = d2f_gyro(data + 15) * M_PI /180;
+            per_tfmini_data.av_.y = d2f_gyro(data + 17) * M_PI /180;
+            per_tfmini_data.av_.z = d2f_gyro(data + 19) * M_PI /180;
 
-            per_sanchi_data.la_.x = d2f_acc(data + 9) * 9.81;
-            per_sanchi_data.la_.y = d2f_acc(data + 11) * 9.81;
-            per_sanchi_data.la_.z = d2f_acc(data + 13) * 9.81;
+            per_tfmini_data.la_.x = d2f_acc(data + 9) * 9.81;
+            per_tfmini_data.la_.y = d2f_acc(data + 11) * 9.81;
+            per_tfmini_data.la_.z = d2f_acc(data + 13) * 9.81;
 
-            per_sanchi_data.mf_.x = d2f_mag(data + 21);
-            per_sanchi_data.mf_.y = d2f_mag(data + 23);
-            per_sanchi_data.mf_.z = d2f_mag(data + 25);
+            per_tfmini_data.mf_.x = d2f_mag(data + 21);
+            per_tfmini_data.mf_.y = d2f_mag(data + 23);
+            per_tfmini_data.mf_.z = d2f_mag(data + 25);
 
-            this->que_sanchi_data.push(per_sanchi_data);
+            this->que_tfmini_data.push(per_tfmini_data);
         }
 
     }
 
     delete[] data_raw;
 
-    return (this->que_sanchi_data);
+    return (this->que_tfmini_data);
 }

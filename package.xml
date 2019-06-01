@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
-  <name>sanchi_driver</name>
+  <name>tfmini_driver</name>
   <version>0.1.0</version>
-  <description>The sanchi_driver package</description>
+  <description>The tfmini_driver package</description>
   <maintainer email="kehan.xue@gmail.com">Kehan Xue</maintainer>
 
   <author>Kehan Xue</author>

@@ -1,9 +1,9 @@
-#include <sanchi_driver/SanchiRosDriver.h>
+#include <tfmini_driver/TfminiRosDriver.h>
 
 using namespace std;
 using namespace vwpp;
 
-SanchiRosDriver::SanchiRosDriver():
+TfminiRosDriver::TfminiRosDriver():
     nh(ros::NodeHandle("~")),
     model("100D2"),
     port("/dev/ttyUSB0"),
@@ -54,7 +54,7 @@ SanchiRosDriver::SanchiRosDriver():
         ROS_WARN("%s, use the default msg_length %d", this->node_name.c_str(), this->msg_length);
     }
 
-    this->sanchi_serial_hardware = new SanchiSerialHardware(this->model,
+    this->tfmini_serial_hardware = new TfminiSerialHardware(this->model,
                                                     this->port,
                                                     this->baud,
                                                     this->msg_length);
@@ -98,49 +98,49 @@ SanchiRosDriver::SanchiRosDriver():
 
 
 
-SanchiRosDriver::~SanchiRosDriver()
+TfminiRosDriver::~TfminiRosDriver()
 {
-    delete this->sanchi_serial_hardware;
+    delete this->tfmini_serial_hardware;
 }
 
 
 
-void SanchiRosDriver::publishData()
+void TfminiRosDriver::publishData()
 {
-    this->que_sanchi_data_ = this->sanchi_serial_hardware->readData();
-    if (this->que_sanchi_data_.size() == 1 || this->que_sanchi_data_.size() == 2)
+    this->que_tfmini_data_ = this->tfmini_serial_hardware->readData();
+    if (this->que_tfmini_data_.size() == 1 || this->que_tfmini_data_.size() == 2)
     {
-        while( !(this->que_sanchi_data_.empty()) )
+        while( !(this->que_tfmini_data_.empty()) )
         {
 
             this->msg_imu.header.stamp = ros::Time::now();
             this->msg_imu.header.frame_id = this->frame_id;
 
-            this->msg_imu.orientation.w = this->que_sanchi_data_.front().q_.w;
-            this->msg_imu.orientation.x = this->que_sanchi_data_.front().q_.x;
-            this->msg_imu.orientation.y = this->que_sanchi_data_.front().q_.y;
-            this->msg_imu.orientation.z = this->que_sanchi_data_.front().q_.z;
+            this->msg_imu.orientation.w = this->que_tfmini_data_.front().q_.w;
+            this->msg_imu.orientation.x = this->que_tfmini_data_.front().q_.x;
+            this->msg_imu.orientation.y = this->que_tfmini_data_.front().q_.y;
+            this->msg_imu.orientation.z = this->que_tfmini_data_.front().q_.z;
 
-            this->msg_imu.angular_velocity.x = this->que_sanchi_data_.front().av_.x; 
-            this->msg_imu.angular_velocity.y = this->que_sanchi_data_.front().av_.y; 
-            this->msg_imu.angular_velocity.z = this->que_sanchi_data_.front().av_.z; 
+            this->msg_imu.angular_velocity.x = this->que_tfmini_data_.front().av_.x;
+            this->msg_imu.angular_velocity.y = this->que_tfmini_data_.front().av_.y;
+            this->msg_imu.angular_velocity.z = this->que_tfmini_data_.front().av_.z;
 
-            this->msg_imu.linear_acceleration.x = this->que_sanchi_data_.front().la_.x; 
-            this->msg_imu.linear_acceleration.y = this->que_sanchi_data_.front().la_.y; 
-            this->msg_imu.linear_acceleration.z = this->que_sanchi_data_.front().la_.z; 
+            this->msg_imu.linear_acceleration.x = this->que_tfmini_data_.front().la_.x;
+            this->msg_imu.linear_acceleration.y = this->que_tfmini_data_.front().la_.y;
+            this->msg_imu.linear_acceleration.z = this->que_tfmini_data_.front().la_.z;
 
             this->imu_pub.publish(this->msg_imu);
 
 
             this->msg_mag.header.stamp = this->msg_imu.header.stamp;
             this->msg_mag.header.frame_id = this->msg_imu.header.frame_id;
-            this->msg_mag.magnetic_field.x = this->que_sanchi_data_.front().mf_.x;
-            this->msg_mag.magnetic_field.y = this->que_sanchi_data_.front().mf_.y;
-            this->msg_mag.magnetic_field.z = this->que_sanchi_data_.front().mf_.z;
+            this->msg_mag.magnetic_field.x = this->que_tfmini_data_.front().mf_.x;
+            this->msg_mag.magnetic_field.y = this->que_tfmini_data_.front().mf_.y;
+            this->msg_mag.magnetic_field.z = this->que_tfmini_data_.front().mf_.z;
 
             this->mag_pub.publish(this->msg_mag);
 
-            this->que_sanchi_data_.pop();
+            this->que_tfmini_data_.pop();
         }
     }
 }
