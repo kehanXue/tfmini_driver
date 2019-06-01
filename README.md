@@ -32,6 +32,6 @@ tfmini模块可以输出三种消息, 分别为距离前方障碍物的距离dis
 
 ROS topics:
 
-- /tfmini_driver_node/dist: 话题中数据类型为 `std_msgs/Float32` , 消息中数据为tfmini距离前方障碍物的距离dist的值, 单位由tfmini模块而定, 其出厂默认单位为cm. dist数据范围为30cm-1200cm, 当障碍物距离小于30cm时, 会一直输出30cm, 大于1200cm时同理.  //TODO, 消息中数据类型可采用std_msgs/Int16
-- /tfmini_driver_node/strength: 话题中数据类型为 `std_msgs/Int32`,  消息中数据为当前激光的强度值. 默认输出值会在0-3000之间, 当strength数据小于20的时候, 认为此时dist数据不可信. 20-2000之间一般认为数据可信, 具体可根据实际来调整.
-- /tfmini_driver_node/mode: 话题中数据类型为`std_msgs/Int8`, 消息中数据为当前模块所处的测距档位. 默认有02和07两种档位. 02档为近距离挡, 07档为远距离档, 具体切换细节见tfmini用户手册/[淘宝商家链接](https://m.tb.cn/h.eVXx8B1?sm=662002). 
+- **/tfmini_driver_node/dist**: 话题中数据类型为 `std_msgs/Float32` , 消息中数据为tfmini距离前方障碍物的距离dist的值, 单位由tfmini模块而定, 其出厂默认单位为cm. dist数据范围为30cm-1200cm, 当障碍物距离小于30cm时, 会一直输出30cm, 大于1200cm时同理.  //TODO, 消息中数据类型可采用std_msgs/Int16
+- **/tfmini_driver_node/strength**: 话题中数据类型为 `std_msgs/Int32`,  消息中数据为当前激光的强度值. 默认输出值会在0-3000之间, 当strength数据小于20的时候, 认为此时dist数据不可信. 20-2000之间一般认为数据可信, 具体可根据实际来调整.
+- **/tfmini_driver_node/mode**: 话题中数据类型为`std_msgs/Int8`, 消息中数据为当前模块所处的测距档位. 默认有02和07两种档位. 02档为近距离挡, 07档为远距离档, 具体切换细节见tfmini用户手册/[淘宝商家链接](https://m.tb.cn/h.eVXx8B1?sm=662002). 
