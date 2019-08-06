@@ -1,8 +1,0 @@
-prefix=/home/kehan/focus_ws/src/tfmini_driver/cmake-build-debug/devel
-
-Name: tfmini_driver
-Description: Description of tfmini_driver
-Version: 0.1.0
-Cflags: 
-Libs: -L/home/kehan/focus_ws/src/tfmini_driver/cmake-build-debug/devel/lib 
-Requires: 

@@ -1,8 +1,0 @@
-prefix=/usr/local
-
-Name: tfmini_driver
-Description: Description of tfmini_driver
-Version: 0.1.0
-Cflags: 
-Libs: -L/usr/local/lib 
-Requires: 
